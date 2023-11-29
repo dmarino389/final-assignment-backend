@@ -27,6 +27,9 @@ def single_post_api(post_id):
         'message': 'A post with that ID does not exist.'
     }, 404
 
+
+
+# Everything below this in the create_post_api function is used for checking wether the post was successfully created
 @api.post('/posts/create')
 @token_auth_required
 def create_post_api(user):
@@ -45,6 +48,11 @@ def create_post_api(user):
         'message': "Successfully created the post."
     }, 201
 
+
+
+
+# Everything made below the creat_user function is meant to confirm whether the username
+# an email in place is allowed and does error handling.
 @api.post('/user/create')
 def create_user():
     data = request.json
@@ -56,24 +64,24 @@ def create_user():
     if user:
         return {
             'status': 'not ok',
-            'message': "That username is already taken."
-        }, 400
+            'message': 'That username is already taken'
+        };400
     user = User.query.filter_by(email=email).first()
     if user:
         return {
             'status': 'not ok',
-            'message': "That email is already in use."
-        }, 400
+            'message': 'That email is already in use'
+        };400
 
     user = User(username, email, password)
-
+    
     db.session.add(user)
     db.session.commit()
 
-    return {
+    return{
         'status': 'ok',
-        'message': "Successfully created your account!"
-    }, 201
+        'message': 'Successfully created your account!'
+    }; 201
 
 
 @api.post('/user/login')
